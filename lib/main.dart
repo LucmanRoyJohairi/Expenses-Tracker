@@ -59,6 +59,13 @@ class _HomePageState extends State<HomePage> {
     // ),
   ];
 
+  //get the transactions from 7 days ago
+  List<Transaction> get recentTransactions {
+    return _userTransaction.where((t) {
+      return t.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
+  }
+
   void _addNewTransaction(String title, String amount) {
     String enteredTitle = title;
     double enteredAmount = double.parse(amount);
@@ -105,7 +112,7 @@ class _HomePageState extends State<HomePage> {
           // crossAxisAlignment: CrossAxisAlignment.stretch, // left to right
           children: [
             TransactionChart(
-              recentTransactions: _userTransaction,
+              recentTransactions: recentTransactions,
             ),
             TransactionList(transactions: _userTransaction)
             //: Container(child: Image.asset('assets/images/empty.png')),

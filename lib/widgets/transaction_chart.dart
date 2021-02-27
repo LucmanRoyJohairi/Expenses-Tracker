@@ -1,3 +1,4 @@
+import 'package:expenses_app/widgets/chart_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/transaction.dart';
@@ -24,27 +25,56 @@ class _TransactionChartState extends State<TransactionChart> {
           totalSum += widget.recentTransactions[i].amount;
         }
       }
-      return {'day': DateFormat.E(weekDay), 'amount': totalSum};
+      print("ge" + DateFormat.E().format(weekDay));
+
+      return {
+        // 'day': DateFormat.E().format(weekDay).substring(0, 1),
+        'day': DateFormat.E().format(weekDay),
+        'amount': totalSum
+      };
+    });
+  }
+
+  // void List<Map> daysTracler(){
+  //   return
+  // }
+  double get maxSpent {
+    return transactionValues.fold(0.0, (sum, item) {
+      return sum + item['amount'];
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    print(transactionValues);
     return Card(
       margin: EdgeInsets.all(20),
       child: Row(
-        children: [
-          Container(
-            //width: double.infinity,
-            padding: EdgeInsets.all(30),
-            child: Text(
-              'For the Chart',
-              style: TextStyle(fontSize: 30),
-              textAlign: TextAlign.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: transactionValues.map((data) {
+          return Flexible(
+            fit: FlexFit.tight,
+            child: Container(
+              margin: EdgeInsets.only(top: 10, bottom: 10),
+              child: ChartBar(
+                label: data['day'],
+                spentAmount: data['amount'],
+                spentAmountPercent: (data['amount'] as double) / maxSpent,
+              ),
             ),
-          ),
-        ],
+          );
+        }).toList(),
       ),
     );
   }
 }
+// Text("${data['day']}  ${data['amount']}")
+// Column(
+// children: [
+// Text("${data['day']}"),
+// SizedBox(
+// height: 10,
+// ),
+// Text("${data['amount']}")
+// ],
+// );
