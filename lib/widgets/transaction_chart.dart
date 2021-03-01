@@ -5,7 +5,7 @@ import '../models/transaction.dart';
 
 class TransactionChart extends StatefulWidget {
   final List<Transaction> recentTransactions;
-
+  //DateTime dateChosen;
   TransactionChart({this.recentTransactions});
 
   @override
@@ -25,14 +25,14 @@ class _TransactionChartState extends State<TransactionChart> {
           totalSum += widget.recentTransactions[i].amount;
         }
       }
-      print("ge" + DateFormat.E().format(weekDay));
+      //print("ge" + DateFormat.E().format(weekDay));
 
       return {
         // 'day': DateFormat.E().format(weekDay).substring(0, 1),
         'day': DateFormat.E().format(weekDay),
         'amount': totalSum
       };
-    });
+    }).reversed.toList();
   }
 
   // void List<Map> daysTracler(){
@@ -46,24 +46,26 @@ class _TransactionChartState extends State<TransactionChart> {
 
   @override
   Widget build(BuildContext context) {
-    print(transactionValues);
+    //print(transactionValues);
     return Card(
       margin: EdgeInsets.all(20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: transactionValues.map((data) {
-          return Flexible(
-            fit: FlexFit.tight,
-            child: Container(
-              margin: EdgeInsets.only(top: 10, bottom: 10),
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: transactionValues.map((data) {
+            return Flexible(
+              fit: FlexFit.tight,
               child: ChartBar(
                 label: data['day'],
                 spentAmount: data['amount'],
-                spentAmountPercent: (data['amount'] as double) / maxSpent,
+                spentAmountPercent: maxSpent == 0.0
+                    ? 0.0
+                    : (data['amount'] as double) / maxSpent,
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }

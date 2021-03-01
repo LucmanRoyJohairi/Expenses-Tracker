@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../models/transaction.dart';
 
 class NewTransaction extends StatefulWidget {
@@ -14,13 +15,31 @@ class NewTransaction extends StatefulWidget {
 class _NewTransactionState extends State<NewTransaction> {
   final titleController = TextEditingController();
   final amountController = TextEditingController();
+  DateTime chosenDate;
 
   void addNew() {
     String t = titleController.text;
     String a = amountController.text;
 
-    widget.addTransac(t, a);
+    widget.addTransac(t, a, chosenDate);
     Navigator.of(context).pop();
+  }
+
+  void showDate() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2021),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      } else {
+        setState(() {
+          chosenDate = pickedDate;
+        });
+      }
+    });
   }
 
   @override
@@ -51,6 +70,29 @@ class _NewTransactionState extends State<NewTransaction> {
               // onChanged: (newVal) {
               //   amountInput = newVal;
               // },
+            ),
+            Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 30),
+                  child: Text(
+                    chosenDate == null
+                        ? 'No Date Selected'
+                        : 'Picked Date: ${DateFormat.yMd().format(chosenDate)}',
+                    style: TextStyle(color: Colors.grey, fontSize: 15),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 30),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.calendar_today,
+                      color: Colors.blue,
+                    ),
+                    onPressed: showDate,
+                  ),
+                ),
+              ],
             ),
             RaisedButton(
               color: Theme.of(context).primaryColor,

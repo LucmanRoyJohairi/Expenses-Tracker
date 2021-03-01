@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String title, String amount) {
+  void _addNewTransaction(String title, String amount, DateTime selectedDate) {
     String enteredTitle = title;
     double enteredAmount = double.parse(amount);
     print(enteredAmount);
@@ -76,9 +76,17 @@ class _HomePageState extends State<HomePage> {
           id: 't00' + (_userTransaction.length).toString(),
           title: enteredTitle,
           amount: enteredAmount,
-          date: DateTime.now(),
+          date: selectedDate,
         ),
       );
+    });
+  }
+
+  void deleteTransaction(String id) {
+    setState(() {
+      _userTransaction.removeWhere((transaction) {
+        return transaction.id == id;
+      });
     });
   }
 
@@ -114,7 +122,10 @@ class _HomePageState extends State<HomePage> {
             TransactionChart(
               recentTransactions: recentTransactions,
             ),
-            TransactionList(transactions: _userTransaction)
+            TransactionList(
+              transactions: _userTransaction,
+              delTransac: deleteTransaction,
+            ),
             //: Container(child: Image.asset('assets/images/empty.png')),
           ],
         ),
