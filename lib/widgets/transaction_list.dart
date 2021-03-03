@@ -10,16 +10,15 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 500,
-      child: (transactions.length == 0)
-          ? Column(
+    return (transactions.length == 0)
+        ? LayoutBuilder(builder: (ctx, constraints) {
+            return Column(
               children: [
                 SizedBox(
                   height: 100,
                 ),
                 Container(
-                  height: 100,
+                  height: constraints.maxHeight * 0.1,
                   child: Image.asset(
                     'assets/images/file.png',
                     fit: BoxFit.cover,
@@ -33,50 +32,53 @@ class TransactionList extends StatelessWidget {
                   ),
                 ),
               ],
-            )
-          : ListView.builder(
-              itemBuilder: (ctx, index) {
-                return Card(
-                  elevation: 2,
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.all(5),
-                          child: FittedBox(
-                            child: Text(
-                              '\$${transactions[index].amount.toStringAsFixed(2)}',
+            );
+          })
+        : ListView.builder(
+            itemBuilder: (ctx, index) {
+              return Card(
+                elevation: 2,
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.white,
+                      child: Padding(
+                        padding: EdgeInsets.all(5),
+                        child: FittedBox(
+                          child: Text(
+                            '\$${transactions[index].amount.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
-                      title: Text(
-                        transactions[index].title,
-                        style: Theme.of(context).textTheme.headline6,
+                    ),
+                    title: Text(
+                      transactions[index].title,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    subtitle: Text(
+                      DateFormat.yMMMd().format(transactions[index].date),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        color: Colors.grey,
                       ),
-                      subtitle: Text(
-                        DateFormat.yMMMd().format(transactions[index].date),
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(
-                          Icons.delete,
-                          color: Colors.grey,
-                        ),
-                        onPressed: () {
-                          delTransac(transactions[index].id);
-                        },
-                      ),
+                      onPressed: () {
+                        delTransac(transactions[index].id);
+                      },
                     ),
                   ),
-                );
-              },
-              itemCount: transactions.length,
-            ),
-    );
+                ),
+              );
+            },
+            itemCount: transactions.length,
+          );
   }
 }
 // Card(

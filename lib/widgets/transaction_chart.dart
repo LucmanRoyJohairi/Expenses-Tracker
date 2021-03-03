@@ -25,8 +25,6 @@ class _TransactionChartState extends State<TransactionChart> {
           totalSum += widget.recentTransactions[i].amount;
         }
       }
-      //print("ge" + DateFormat.E().format(weekDay));
-
       return {
         // 'day': DateFormat.E().format(weekDay).substring(0, 1),
         'day': DateFormat.E().format(weekDay),

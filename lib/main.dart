@@ -1,10 +1,18 @@
+//import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import './widgets/transaction_chart.dart';
 import './widgets/new_transaction.dart';
 import './models/transaction.dart';
 import './widgets/transaction_list.dart';
 
 void main() {
+  //WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
   runApp(MyApp());
 }
 
@@ -24,7 +32,7 @@ class MyApp extends StatelessWidget {
         textTheme: ThemeData.light().textTheme.copyWith(
               headline6: TextStyle(
                 fontFamily: 'OpenSans',
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).primaryColor,
               ),
@@ -100,32 +108,81 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
+  //for the switch
+  bool _showchart = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Personal Expenses'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              showAddTransactionScreen(context);
-            },
-          )
-        ],
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final theAppBar = AppBar(
+      title: Text('Personal Expenses'),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            showAddTransactionScreen(context);
+          },
+        )
+      ],
+    );
+    final listOfTransaction = Container(
+      height: (MediaQuery.of(context).size.height -
+          theAppBar.preferredSize.height -
+          MediaQuery.of(context).padding.top),
+      child: TransactionList(
+        transactions: _userTransaction,
+        delTransac: deleteTransaction,
       ),
+    );
+    final toggleChart = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Show Chart'),
+        Switch(
+          activeColor: Colors.blue,
+          value: _showchart,
+          onChanged: (val) {
+            setState(() {
+              _showchart = val;
+            });
+          },
+        ),
+      ],
+    );
+
+    return Scaffold(
+      appBar: theAppBar,
       body: SingleChildScrollView(
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.center, //top to bottom
           // crossAxisAlignment: CrossAxisAlignment.stretch, // left to right
           children: [
-            TransactionChart(
-              recentTransactions: recentTransactions,
-            ),
-            TransactionList(
-              transactions: _userTransaction,
-              delTransac: deleteTransaction,
-            ),
+            if (isLandscape) toggleChart,
+
+            if (!isLandscape)
+              Container(
+                height: (MediaQuery.of(context).size.height -
+                        theAppBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.3,
+                child: TransactionChart(
+                  recentTransactions: recentTransactions,
+                ),
+              ),
+            if (!isLandscape) listOfTransaction,
+            if (isLandscape)
+              (_showchart)
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              theAppBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.7,
+                      child: TransactionChart(
+                        recentTransactions: recentTransactions,
+                      ),
+                    )
+                  : listOfTransaction
             //: Container(child: Image.asset('assets/images/empty.png')),
           ],
         ),
@@ -140,12 +197,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-// Container(
-// width: double.infinity,
-// //padding: EdgeInsets.all(40),
-// child: ListTile(
-// leading: Text(purchased.amount.toString()),
-// title: Text(purchased.title),
-// subtitle: Text(purchased.date.toString()),
-// ),
-// ),
