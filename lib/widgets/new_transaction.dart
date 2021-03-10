@@ -44,70 +44,77 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      //elevation: 2,
-      child: Container(
-        width: double.infinity,
-        margin: EdgeInsets.only(left: 30, right: 30, bottom: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: 'Title'),
-              controller: titleController,
-              keyboardType: TextInputType.text,
-              onSubmitted: (val) =>
-                  addNew(), //refers to the check sign after typing
-              // onChanged: (newVal) {
-              //   titleInput = newVal;
-              // },
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Amount'),
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              onSubmitted: (val) => addNew(),
-              // onChanged: (newVal) {
-              //   amountInput = newVal;
-              // },
-            ),
-            Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 30),
-                  child: Text(
-                    chosenDate == null
-                        ? 'No Date Selected'
-                        : 'Picked Date: ${DateFormat.yMd().format(chosenDate)}',
-                    style: TextStyle(color: Colors.grey, fontSize: 15),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 30),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.calendar_today,
-                      color: Colors.blue,
-                    ),
-                    onPressed: showDate,
-                  ),
-                ),
-              ],
-            ),
-            RaisedButton(
-              color: Theme.of(context).primaryColor,
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'Submit',
-                style: TextStyle(color: Colors.white),
+    return SingleChildScrollView(
+      child: Card(
+        //elevation: 2,
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.only(
+            top: 30,
+            left: 30,
+            right: 30,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 30,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: 'Title'),
+                controller: titleController,
+                keyboardType: TextInputType.text,
+                onSubmitted: (val) =>
+                    addNew(), //refers to the check sign after typing
+                // onChanged: (newVal) {
+                //   titleInput = newVal;
+                // },
               ),
-              onPressed: () {
-                addNew();
-                // print(titleController.text);
-                // print(amountController.text);
-              },
-            )
-          ],
+              TextField(
+                decoration: InputDecoration(labelText: 'Amount'),
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                onSubmitted: (val) => addNew(),
+                // onChanged: (newVal) {
+                //   amountInput = newVal;
+                // },
+              ),
+              Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 30),
+                    child: Text(
+                      chosenDate == null
+                          ? 'No Date Selected'
+                          : 'Picked Date: ${DateFormat.yMd().format(chosenDate)}',
+                      style: TextStyle(color: Colors.grey, fontSize: 15),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 30),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.calendar_today,
+                        color: Colors.blue,
+                      ),
+                      onPressed: showDate,
+                    ),
+                  ),
+                ],
+              ),
+              RaisedButton(
+                color: Theme.of(context).primaryColor,
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  'Submit',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  addNew();
+                  // print(titleController.text);
+                  // print(amountController.text);
+                },
+              )
+            ],
+          ),
         ),
       ),
     );
